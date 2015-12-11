@@ -10,8 +10,9 @@
 		A92C83051C1808060020A8B1 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92C83041C1808060020A8B1 /* CoreDataStackManager.swift */; };
 		A92C83071C182D2D0020A8B1 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92C83061C182D2D0020A8B1 /* Pin.swift */; };
 		A92C83091C182D390020A8B1 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92C83081C182D390020A8B1 /* Photo.swift */; };
-		A92C830B1C1988AA0020A8B1 /* MapPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92C830A1C1988AA0020A8B1 /* MapPin.swift */; };
+		A92C830B1C1988AA0020A8B1 /* PinAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92C830A1C1988AA0020A8B1 /* PinAnnotation.swift */; };
 		A92C83101C1996940020A8B1 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A92C830E1C1996940020A8B1 /* Model.xcdatamodeld */; };
+		A988FE3A1C1AC3EA000DFDC2 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A988FE391C1AC3EA000DFDC2 /* PhotoAlbumViewController.swift */; };
 		A9EE90021C1502880093D0B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EE90011C1502880093D0B6 /* AppDelegate.swift */; };
 		A9EE90071C1502880093D0B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9EE90051C1502880093D0B6 /* Main.storyboard */; };
 		A9EE900C1C1502880093D0B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9EE900B1C1502880093D0B6 /* Assets.xcassets */; };
@@ -24,8 +25,9 @@
 		A92C83041C1808060020A8B1 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		A92C83061C182D2D0020A8B1 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		A92C83081C182D390020A8B1 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
-		A92C830A1C1988AA0020A8B1 /* MapPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapPin.swift; sourceTree = "<group>"; };
+		A92C830A1C1988AA0020A8B1 /* PinAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinAnnotation.swift; sourceTree = "<group>"; };
 		A92C830F1C1996940020A8B1 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		A988FE391C1AC3EA000DFDC2 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		A9EE8FFE1C1502880093D0B6 /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9EE90011C1502880093D0B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A9EE90061C1502880093D0B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -52,6 +54,7 @@
 			isa = PBXGroup;
 			children = (
 				A9EE90161C154CCC0093D0B6 /* TravelLocationsViewController.swift */,
+				A988FE391C1AC3EA000DFDC2 /* PhotoAlbumViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -93,7 +96,7 @@
 				A9EE900B1C1502880093D0B6 /* Assets.xcassets */,
 				A9EE900D1C1502880093D0B6 /* LaunchScreen.storyboard */,
 				A9EE90101C1502880093D0B6 /* Info.plist */,
-				A92C830A1C1988AA0020A8B1 /* MapPin.swift */,
+				A92C830A1C1988AA0020A8B1 /* PinAnnotation.swift */,
 				A92C830E1C1996940020A8B1 /* Model.xcdatamodeld */,
 			);
 			path = VirtualTourist;
@@ -173,7 +176,8 @@
 			files = (
 				A92C83091C182D390020A8B1 /* Photo.swift in Sources */,
 				A92C83071C182D2D0020A8B1 /* Pin.swift in Sources */,
-				A92C830B1C1988AA0020A8B1 /* MapPin.swift in Sources */,
+				A92C830B1C1988AA0020A8B1 /* PinAnnotation.swift in Sources */,
+				A988FE3A1C1AC3EA000DFDC2 /* PhotoAlbumViewController.swift in Sources */,
 				A92C83101C1996940020A8B1 /* Model.xcdatamodeld in Sources */,
 				A9EE90021C1502880093D0B6 /* AppDelegate.swift in Sources */,
 				A92C83051C1808060020A8B1 /* CoreDataStackManager.swift in Sources */,

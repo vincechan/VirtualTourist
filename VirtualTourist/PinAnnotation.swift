@@ -8,7 +8,7 @@
 
 import MapKit
 
-class MapPin : NSObject, MKAnnotation {
+class PinAnnotation : NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
     var pin : Pin?
     
@@ -18,6 +18,6 @@ class MapPin : NSObject, MKAnnotation {
     
     init(pin : Pin) {
         self.pin = pin
-        self.coordinate = pin.getCoordiate()
+        self.coordinate = pin.getCoordinate()
     }
 }
