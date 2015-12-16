@@ -26,5 +26,10 @@ class PhotoAlbumViewController: UIViewController {
         let region = MKCoordinateRegionMake(pin!.getCoordinate(), span)
         mapView.addAnnotation(annotation)
         mapView.setRegion(region, animated: true)
+        
+        FlickrClient.sharedInstance().getPhotos(pin!.latitude, longitude: pin!.longitude) {
+            (photos, error) in
+         
+        }
     }
 }
