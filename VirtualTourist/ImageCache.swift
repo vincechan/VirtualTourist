@@ -8,21 +8,12 @@
 
 import UIKit
 
+// manage caching for photo images
 class ImageCache {
     
     private var inMemoryCache = NSCache()
     
-    // MARK: - Retreiving images
-    
-    func imageWithIdentifier(identifier: String?) -> UIImage? {
-        
-        // If the identifier is nil, or empty, return nil
-        if identifier == nil || identifier! == "" {
-            return nil
-        }
-        
-        let path = pathForIdentifier(identifier!)
-        
+    func imageWithPath(path: String) -> UIImage? {
         // First try the memory cache
         if let image = inMemoryCache.objectForKey(path) as? UIImage {
             return image
@@ -36,16 +27,13 @@ class ImageCache {
         return nil
     }
     
-    // MARK: - Saving images
-    
-    func storeImage(image: UIImage?, withIdentifier identifier: String) {
-        let path = pathForIdentifier(identifier)
-        
+    func storeImage(image: UIImage?, withPath path: String) {
         // If the image is nil, remove images from the cache
         if image == nil {
             inMemoryCache.removeObjectForKey(path)
             
             do {
+                print("delete file at \(path)")
                 try NSFileManager.defaultManager().removeItemAtPath(path)
             } catch _ {}
             
@@ -58,14 +46,5 @@ class ImageCache {
         // And in documents directory
         let data = UIImagePNGRepresentation(image!)!
         data.writeToFile(path, atomically: true)
-    }
-    
-    // MARK: - Helper
-    
-    func pathForIdentifier(identifier: String) -> String {
-        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-        let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
-        
-        return fullURL.path!
     }
 }

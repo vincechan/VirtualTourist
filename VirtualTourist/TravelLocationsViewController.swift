@@ -52,9 +52,6 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     }
     
     func handleLongPress(sender: UIGestureRecognizer) {
-        print("handleLongPress \(sender.state.rawValue)")
-        
-        
         if sender.state == .Began {
             let touchPoint = sender.locationInView(self.mapView)
             let touchCoord = self.mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
@@ -116,5 +113,4 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         NSUserDefaults.standardUserDefaults().setDouble(mapView.region.span.latitudeDelta, forKey: latitudeDelatKey)
         NSUserDefaults.standardUserDefaults().setDouble(mapView.region.span.longitudeDelta, forKey: longitudeDeltaKey)
     }
-    
 }
