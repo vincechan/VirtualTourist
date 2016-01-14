@@ -91,6 +91,9 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         // signal to cancel download in case there is a download in progress in background thread
         cancelDownload = true
         
+        // deselect the pin so we can comeback and select it again
+        mapView.deselectAnnotation(view.annotation, animated: true)
+        
         controller.pin = (view.annotation as! PinAnnotation).pin
         navigationController?.pushViewController(controller, animated: true)
     }
