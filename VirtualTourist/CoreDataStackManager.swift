@@ -14,16 +14,13 @@ private let SQLITE_FILE_NAME = "VirtualTourist.sqlite"
 class CoreDataStackManager {
     
     class func sharedInstance() -> CoreDataStackManager {
-        
         struct Static {
             static let instance = CoreDataStackManager()
         }
-        
         return Static.instance
     }
     
     lazy var applicationDocumentsDirectory: NSURL = {
-        
         print("Instantiating the applicationDocumentsDirectory property")
         
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
@@ -32,7 +29,6 @@ class CoreDataStackManager {
     
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        
         print("Instantiating the managedObjectModel property")
         
         let modelURL = NSBundle.mainBundle().URLForResource("Model", withExtension: "momd")!
@@ -58,8 +54,6 @@ class CoreDataStackManager {
         
         let coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent(SQLITE_FILE_NAME)
-        
-        print("sqlite path: \(url.path!)")
         
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
@@ -92,12 +86,9 @@ class CoreDataStackManager {
                 try managedObjectContext.save()
             } catch {
                 let nserror = error as NSError
-                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                print("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }
 }
-
-
-
 

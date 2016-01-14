@@ -153,6 +153,15 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="aoV-Tb-usu"/>
                                 </items>
                             </toolbar>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" No image in this location" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wZG-Qc-cmo">
+                                <rect key="frame" x="0.0" y="184" width="600" height="87"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="87" id="ZU4-N4-tdG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -162,6 +171,9 @@
                             <constraint firstItem="igB-ao-YzC" firstAttribute="leading" secondItem="2a9-OU-s3v" secondAttribute="leading" id="A9L-E5-QAH"/>
                             <constraint firstItem="cYN-Ic-L8f" firstAttribute="top" secondItem="2a9-OU-s3v" secondAttribute="bottom" constant="408" id="Ajl-aU-144"/>
                             <constraint firstItem="igB-ao-YzC" firstAttribute="trailing" secondItem="2a9-OU-s3v" secondAttribute="trailing" id="EPj-vq-88l"/>
+                            <constraint firstItem="wZG-Qc-cmo" firstAttribute="leading" secondItem="2a9-OU-s3v" secondAttribute="leading" id="FCX-gh-9mS"/>
+                            <constraint firstItem="wZG-Qc-cmo" firstAttribute="top" secondItem="igB-ao-YzC" secondAttribute="top" id="NUD-0k-gcv"/>
+                            <constraint firstItem="wZG-Qc-cmo" firstAttribute="trailing" secondItem="2a9-OU-s3v" secondAttribute="trailing" id="Wbe-KC-hIc"/>
                             <constraint firstItem="cYN-Ic-L8f" firstAttribute="top" secondItem="2a9-OU-s3v" secondAttribute="bottom" constant="408" id="XO9-sR-tBc"/>
                             <constraint firstItem="fJF-sF-KYF" firstAttribute="top" secondItem="igB-ao-YzC" secondAttribute="bottom" constant="5" id="iTw-v1-w1I"/>
                             <constraint firstItem="igB-ao-YzC" firstAttribute="top" secondItem="vix-9K-lsj" secondAttribute="bottom" constant="125" id="ixj-Xz-KeM"/>
@@ -182,6 +194,7 @@
                         <outlet property="bottomButton" destination="ewu-be-VwE" id="kd0-Gt-BVI"/>
                         <outlet property="collectionView" destination="igB-ao-YzC" id="Arl-31-pcP"/>
                         <outlet property="mapView" destination="2a9-OU-s3v" id="1hr-VV-Oy7"/>
+                        <outlet property="noPhotoLabel" destination="wZG-Qc-cmo" id="Wqx-Ib-cbm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jjd-uo-GAO" userLabel="First Responder" sceneMemberID="firstResponder"/>

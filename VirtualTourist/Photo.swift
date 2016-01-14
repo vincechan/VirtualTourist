@@ -63,10 +63,9 @@ class Photo : NSManagedObject {
         // delete physical file
         FlickrClient.Caches.imageCache.storeImage(nil, withPath: localPath)
         
+        // delete from core data
         CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(self)
     }
-    
-    
     
     // determine a photo's image file path given its identifier
     func pathForIdentifier(identifier: String) -> String {

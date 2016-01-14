@@ -14,13 +14,12 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
-    let latitudeKey = "latitude"
-    let longitudeKey = "longitude"
-    let latitudeDelatKey = "latitudeDelta"
-    let longitudeDeltaKey = "longitudeDelta"
-    let savedLocationKey = "savedLocationKey"
     var droppedPin : PinAnnotation?
+    
+    // to persist center of map and zoom level
     var preference: Preference?
+    
+    var cancelDownload = false
     
     override func viewDidLoad() {
         mapView.delegate = self
@@ -41,36 +40,39 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         loadMapRegion()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        cancelDownload = false
+    }
+    
     func fetchAllPins() -> [Pin] {
         let fetchRequest = NSFetchRequest(entityName: "Pin")
-        
         do {
             return try CoreDataStackManager.sharedInstance().managedObjectContext.executeFetchRequest(fetchRequest) as! [Pin]
         } catch let error as NSError {
-            print("Error in fetchAllPins(): \(error)")
+            showError("Error in fetchAllPins(): \(error)")
             return [Pin]()
         }
     }
     
     func handleLongPress(sender: UIGestureRecognizer) {
         if sender.state == .Began {
-            let touchPoint = sender.locationInView(self.mapView)
-            let touchCoord = self.mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
+            let touchPoint = sender.locationInView(mapView)
+            let touchCoord = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
             
             droppedPin = PinAnnotation(coordinate: touchCoord)
-            self.mapView.addAnnotation(self.droppedPin!)
+            mapView.addAnnotation(droppedPin!)
         }
         else if sender.state == .Changed {
             if let pin = droppedPin {
-                let touchPoint = sender.locationInView(self.mapView)
-                let touchCoord = self.mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
+                let touchPoint = sender.locationInView(mapView)
+                let touchCoord = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
                 pin.coordinate = touchCoord
             }
         }
         else if sender.state == .Ended {
             if let pin = droppedPin {
-                let touchPoint = sender.locationInView(self.mapView)
-                let touchCoord = self.mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
+                let touchPoint = sender.locationInView(mapView)
+                let touchCoord = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
                 pin.coordinate = touchCoord
                 
                 pin.pin  = Pin(longitude: pin.coordinate.longitude, latitude: pin.coordinate.latitude, context: CoreDataStackManager.sharedInstance().managedObjectContext)
@@ -83,39 +85,43 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        print("didSelectAnnotationView")
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
+        let controller = storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
+        
+        // signal to cancel download in case there is a download in progress in background thread
+        cancelDownload = true
         
         controller.pin = (view.annotation as! PinAnnotation).pin
-        self.navigationController?.pushViewController(controller, animated: true)
-        
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        print("regionDidChange")
+        // save the map center and zoom level as soon as the map region has changed
         saveMapRegion()
     }
     
+    // download photos from flickr into local cache
     func downloadPhotos(pin: Pin) {
         FlickrClient.sharedInstance().getPhotos(pin.latitude, longitude: pin.longitude) {
             (result, error) in
             if (error != nil) {
-                print("error \(error)")
+                self.showError("download photos error: \(error)")
             }
             else {
                 dispatch_async(dispatch_get_main_queue()) {
-                    let photos = Photo.photosFromResult(result, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-                    print("loadPhoto count: \(photos.count)")
-                    for photo in photos {
-                        photo.pin = pin
+                    if (!self.cancelDownload) {
+                        let photos = Photo.photosFromResult(result, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                        for photo in photos {
+                            photo.pin = pin
+                        }
+                        CoreDataStackManager.sharedInstance().saveContext()
                     }
-                    CoreDataStackManager.sharedInstance().saveContext()
                 }
                 
             }
         }
     }
     
+    // restore map center and zoom level
     func loadMapRegion() {
         preference = Preference.loadPreference()
         if preference != nil {
@@ -130,6 +136,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+    // save map center and zoom level
     func saveMapRegion() {
         if (preference == nil) {
             preference = Preference(
@@ -144,5 +151,14 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
             preference!.latitudeDelta = mapView.region.span.latitudeDelta
         }
         CoreDataStackManager.sharedInstance().saveContext()
+    }
+    
+    // Show an error message with alert
+    func showError(error: String) {
+        dispatch_async(dispatch_get_main_queue()) {
+            let alert = UIAlertController(title: "", message: error, preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
     }
 }

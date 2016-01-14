@@ -8,6 +8,7 @@
 import CoreData
 import MapKit
 
+// Preference is used to persist map center and zoom level
 class Preference : NSManagedObject {
     @NSManaged var latitude : Double
     @NSManaged var longitude : Double
@@ -28,13 +29,16 @@ class Preference : NSManagedObject {
         self.longitudeDelta = longitudeDelta
     }
     
+    // retrieve preference from CoreData
     static func loadPreference()-> Preference? {
         var preference : Preference?
         do {
             let fetchRequest = NSFetchRequest(entityName: "Preference")
             fetchRequest.fetchLimit = 1
             if let results = try CoreDataStackManager.sharedInstance().managedObjectContext.executeFetchRequest(fetchRequest) as? [Preference] {
-                preference = results[0]
+                if (results.count > 0) {
+                    preference = results[0]
+                }
             }
         } catch {
         }

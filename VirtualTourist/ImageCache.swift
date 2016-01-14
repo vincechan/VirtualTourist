@@ -33,7 +33,6 @@ class ImageCache {
             inMemoryCache.removeObjectForKey(path)
             
             do {
-                print("delete file at \(path)")
                 try NSFileManager.defaultManager().removeItemAtPath(path)
             } catch _ {}
             

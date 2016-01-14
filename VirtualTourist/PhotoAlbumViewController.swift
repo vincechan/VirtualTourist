@@ -15,7 +15,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var bottomButton: UIBarButtonItem!
+    
+    @IBOutlet weak var noPhotoLabel: UILabel!
     var pin : Pin!
+    
     
     // The selected indexes array keeps all of the indexPaths for cells that are "selected". The array is
     // used inside cellForItemAtIndexPath to lower the alpha of selected cells.
@@ -42,9 +45,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         
         do {
             try fetchedResultsController.performFetch()
-            print("fetched count \(fetchedResultsController.sections![0].numberOfObjects)")
         } catch {
-            print("failed to fetch results controller.")
+            showError("Failed to fetch results controller.")
         }
     }
     
@@ -59,7 +61,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let itemWidth = floor((self.collectionView.frame.size.width - 2)/3)
+        let itemWidth = floor((collectionView.frame.size.width - 2)/3)
         let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         layout.minimumLineSpacing = 1
@@ -82,10 +84,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     }()
     
     func configureCell(cell: PhotoCell, atIndexPath indexPath: NSIndexPath) {
-        let photo = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
+        let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
         
         if photo.photoImage != nil {
-            print("found \(photo.id) in cache")
             cell.imageView.hidden = false
             cell.imageView.image = photo.photoImage
         }
@@ -95,7 +96,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
             FlickrClient.sharedInstance().getImage(photo.imageUrl) {
                 (imageData, error) in
                 if let downloadError = error {
-                    print(downloadError)
+                    print("download image error: \(downloadError)")
                 }
                 else {
                     if let image = UIImage(data: imageData!) {
@@ -112,7 +113,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
             }
         }
         
-        
+        // set the alpha to indicate an item is selected
         if let _ = selectedIndexes.indexOf(indexPath) {
             cell.imageView.alpha = 0.5
         } else {
@@ -131,30 +132,35 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     func loadPhoto() {
-        print("loadPhoto")
-        
+        noPhotoLabel.hidden = true
+        bottomButton.enabled = false
         FlickrClient.sharedInstance().getPhotos(pin!.latitude, longitude: pin!.longitude) {
             (result, error) in
             if (error != nil) {
-                print("error \(error)")
+                self.showError("error downloading photos: \(error)")
             }
             else {
                 dispatch_async(dispatch_get_main_queue()) {
                     let photos = Photo.photosFromResult(result, context: self.sharedContext)
-                    print("loadPhoto count: \(photos.count)")
                     for photo in photos {
                         photo.pin = self.pin
                     }
                     CoreDataStackManager.sharedInstance().saveContext()
+                  
+                    if photos.isEmpty {
+                        self.noPhotoLabel.hidden = false
+                    }
                 }
                 
+            }
+            dispatch_async(dispatch_get_main_queue()) {
+                self.bottomButton.enabled = true
             }
         }
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        print("number Of Cells: \(sectionInfo.numberOfObjects)")
+        let sectionInfo = fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects
     }
     
@@ -184,8 +190,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        print("numberOfSections : \(self.fetchedResultsController.sections!.count)")
-        return self.fetchedResultsController.sections?.count ?? 0
+        return fetchedResultsController.sections?.count ?? 0
     }
     
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
@@ -193,8 +198,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         insertedIndexPaths = [NSIndexPath]()
         deletedIndexPaths = [NSIndexPath]()
         updatedIndexPaths = [NSIndexPath]()
-        
-        print("in controllerWillChangeContent")
     }
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
@@ -202,22 +205,19 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         switch type{
             
         case .Insert:
-            print("Insert an item \(newIndexPath!.row)")
-            // Here we are noting that a new Color instance has been added to Core Data. We remember its index path
+            // Here we are noting that a new Photo instance has been added to Core Data. We remember its index path
             // so that we can add a cell in "controllerDidChangeContent". Note that the "newIndexPath" parameter has
             // the index path that we want in this case
             insertedIndexPaths.append(newIndexPath!)
             break
         case .Delete:
-            print("Delete an item")
-            // Here we are noting that a Color instance has been deleted from Core Data. We keep remember its index path
+            // Here we are noting that a Photo instance has been deleted from Core Data. We keep remember its index path
             // so that we can remove the corresponding cell in "controllerDidChangeContent". The "indexPath" parameter has
             // value that we want in this case.
             deletedIndexPaths.append(indexPath!)
             break
         case .Update:
-            print("Update an item.")
-            // We don't expect Color instances to change after they are created. But Core Data would
+            // We don't expect Photo instances to change after they are created. But Core Data would
             // notify us of changes if any occured. This can be useful if you want to respond to changes
             // that come about after data is downloaded. For example, when an images is downloaded from
             // Flickr in the Virtual Tourist app
@@ -235,30 +235,21 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     // into the three index path arrays (insert, delete, and upate). We now need to loop through the
     // arrays and perform the changes.
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        print("in controllerDidChangeContent. changes.count: \(insertedIndexPaths.count + deletedIndexPaths.count)")
-        
         dispatch_async(dispatch_get_main_queue()) {
             self.collectionView.performBatchUpdates(
                 {
                     () -> Void in
                     for indexPath in self.insertedIndexPaths {
-                        print("insert item at \(indexPath.row)")
                         self.collectionView.insertItemsAtIndexPaths([indexPath])
                     }
-                    print("process insert \(self.insertedIndexPaths.count)")
                     for indexPath in self.deletedIndexPaths {
                         self.collectionView.deleteItemsAtIndexPaths([indexPath])
                     }
-                    print("process delete \(self.deletedIndexPaths.count)")
                     for indexPath in self.updatedIndexPaths {
                         self.collectionView.reloadItemsAtIndexPaths([indexPath])
                     }
-                    print("process update \(self.updatedIndexPaths.count)")
                 }
-                ,completion: {
-                    (finish) -> Void in
-                    print("finish")
-            })
+                ,completion: nil)
         }
     }
     
@@ -289,6 +280,15 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     func deleteAllPhotos() {
         for photo in fetchedResultsController.fetchedObjects as! [Photo] {
             photo.delete()
+        }
+    }
+    
+    // Show an error message with alert
+    func showError(error: String) {
+        dispatch_async(dispatch_get_main_queue()) {
+            let alert = UIAlertController(title: "", message: error, preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
         }
     }
 }
