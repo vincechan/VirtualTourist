@@ -272,6 +272,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         for photo in photosToDelete {
             photo.delete()
         }
+        CoreDataStackManager.sharedInstance().saveContext()
         
         selectedIndexes = [NSIndexPath]()
     }
@@ -281,6 +282,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         for photo in fetchedResultsController.fetchedObjects as! [Photo] {
             photo.delete()
         }
+        CoreDataStackManager.sharedInstance().saveContext()
     }
     
     // Show an error message with alert
