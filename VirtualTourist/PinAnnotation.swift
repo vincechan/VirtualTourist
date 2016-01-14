@@ -20,4 +20,10 @@ class PinAnnotation : NSObject, MKAnnotation {
         self.pin = pin
         self.coordinate = pin.getCoordinate()
     }
+    
+    func updateCoordinate(newCoordinate: CLLocationCoordinate2D)->Void {
+        willChangeValueForKey("coordinate")
+        coordinate = newCoordinate
+        didChangeValueForKey("coordinate")
+    }
 }

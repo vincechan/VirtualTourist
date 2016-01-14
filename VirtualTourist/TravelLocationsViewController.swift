@@ -60,20 +60,21 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
             let touchCoord = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
             
             droppedPin = PinAnnotation(coordinate: touchCoord)
+            
             mapView.addAnnotation(droppedPin!)
         }
         else if sender.state == .Changed {
             if let pin = droppedPin {
                 let touchPoint = sender.locationInView(mapView)
                 let touchCoord = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
-                pin.coordinate = touchCoord
+                pin.updateCoordinate(touchCoord)
             }
         }
         else if sender.state == .Ended {
             if let pin = droppedPin {
                 let touchPoint = sender.locationInView(mapView)
                 let touchCoord = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
-                pin.coordinate = touchCoord
+                pin.updateCoordinate(touchCoord)
                 
                 pin.pin  = Pin(longitude: pin.coordinate.longitude, latitude: pin.coordinate.latitude, context: CoreDataStackManager.sharedInstance().managedObjectContext)
                 CoreDataStackManager.sharedInstance().saveContext()
