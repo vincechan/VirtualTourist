@@ -76,6 +76,8 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
                 pin.pin  = Pin(longitude: pin.coordinate.longitude, latitude: pin.coordinate.latitude, context: CoreDataStackManager.sharedInstance().managedObjectContext)
                 CoreDataStackManager.sharedInstance().saveContext()
                 
+                // download photos as soon as pin is dropped
+                downloadPhotos(pin.pin!)
             }
         }
     }
@@ -92,6 +94,26 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         print("regionDidChange")
         saveMapRegion()
+    }
+    
+    func downloadPhotos(pin: Pin) {
+        FlickrClient.sharedInstance().getPhotos(pin.latitude, longitude: pin.longitude) {
+            (result, error) in
+            if (error != nil) {
+                print("error \(error)")
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    let photos = Photo.photosFromResult(result, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                    print("loadPhoto count: \(photos.count)")
+                    for photo in photos {
+                        photo.pin = pin
+                    }
+                    CoreDataStackManager.sharedInstance().saveContext()
+                }
+                
+            }
+        }
     }
     
     func loadMapRegion() {
