@@ -20,6 +20,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     let longitudeDeltaKey = "longitudeDelta"
     let savedLocationKey = "savedLocationKey"
     var droppedPin : PinAnnotation?
+    var preference: Preference?
     
     override func viewDidLoad() {
         mapView.delegate = self
@@ -74,6 +75,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
                 
                 pin.pin  = Pin(longitude: pin.coordinate.longitude, latitude: pin.coordinate.latitude, context: CoreDataStackManager.sharedInstance().managedObjectContext)
                 CoreDataStackManager.sharedInstance().saveContext()
+                
             }
         }
     }
@@ -93,24 +95,32 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     }
     
     func loadMapRegion() {
-        let savedLocation = NSUserDefaults.standardUserDefaults().boolForKey(savedLocationKey)
-        if savedLocation {
+        preference = Preference.loadPreference()
+        if preference != nil {
             let span = MKCoordinateSpan(
-                latitudeDelta: NSUserDefaults.standardUserDefaults().doubleForKey(latitudeDelatKey),
-                longitudeDelta: NSUserDefaults.standardUserDefaults().doubleForKey(longitudeDeltaKey))
+                latitudeDelta: preference!.latitudeDelta,
+                longitudeDelta: preference!.longitudeDelta)
             let center = CLLocationCoordinate2DMake(
-                NSUserDefaults.standardUserDefaults().doubleForKey(latitudeKey),
-                NSUserDefaults.standardUserDefaults().doubleForKey(longitudeKey))
+                preference!.latitude,
+                preference!.longitude)
             let region = MKCoordinateRegionMake(center, span)
             mapView.setRegion(region, animated: true)
         }
     }
     
     func saveMapRegion() {
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: savedLocationKey)
-        NSUserDefaults.standardUserDefaults().setDouble(mapView.region.center.latitude, forKey: latitudeKey)
-        NSUserDefaults.standardUserDefaults().setDouble(mapView.region.center.longitude, forKey: longitudeKey)
-        NSUserDefaults.standardUserDefaults().setDouble(mapView.region.span.latitudeDelta, forKey: latitudeDelatKey)
-        NSUserDefaults.standardUserDefaults().setDouble(mapView.region.span.longitudeDelta, forKey: longitudeDeltaKey)
+        if (preference == nil) {
+            preference = Preference(
+                longitude: mapView.region.center.longitude, latitude: mapView.region.center.latitude,
+                longitudeDelta: mapView.region.span.longitudeDelta, latitudeDelta: mapView.region.span.latitudeDelta,
+                context: CoreDataStackManager.sharedInstance().managedObjectContext)
+        }
+        else {
+            preference!.longitude = mapView.region.center.longitude
+            preference!.latitude = mapView.region.center.latitude
+            preference!.longitudeDelta = mapView.region.span.longitudeDelta
+            preference!.latitudeDelta = mapView.region.span.latitudeDelta
+        }
+        CoreDataStackManager.sharedInstance().saveContext()
     }
 }

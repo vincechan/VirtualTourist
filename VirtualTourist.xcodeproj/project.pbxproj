@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A914C1BE1C471C7800738ACA /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = A914C1BD1C471C7800738ACA /* Preference.swift */; };
 		A92C83051C1808060020A8B1 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92C83041C1808060020A8B1 /* CoreDataStackManager.swift */; };
 		A92C83071C182D2D0020A8B1 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92C83061C182D2D0020A8B1 /* Pin.swift */; };
 		A92C83091C182D390020A8B1 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92C83081C182D390020A8B1 /* Photo.swift */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A914C1BD1C471C7800738ACA /* Preference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preference.swift; sourceTree = "<group>"; };
 		A92C83041C1808060020A8B1 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		A92C83061C182D2D0020A8B1 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		A92C83081C182D390020A8B1 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				A92C83061C182D2D0020A8B1 /* Pin.swift */,
 				A973A7B41C1FDA490068EB6D /* FlickrClient.swift */,
 				A973A7B61C2172CC0068EB6D /* ImageCache.swift */,
+				A914C1BD1C471C7800738ACA /* Preference.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -184,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A92C83091C182D390020A8B1 /* Photo.swift in Sources */,
+				A914C1BE1C471C7800738ACA /* Preference.swift in Sources */,
 				A92C83071C182D2D0020A8B1 /* Pin.swift in Sources */,
 				A92C830B1C1988AA0020A8B1 /* PinAnnotation.swift in Sources */,
 				A988FE3A1C1AC3EA000DFDC2 /* PhotoAlbumViewController.swift in Sources */,

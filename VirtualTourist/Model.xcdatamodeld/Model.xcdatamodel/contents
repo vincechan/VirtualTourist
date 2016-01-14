@@ -11,8 +11,15 @@
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="photos" toMany="YES" deletionRule="Nullify" destinationEntity="Photo" inverseName="pin" inverseEntity="Photo" syncable="YES"/>
     </entity>
+    <entity name="Preference" representedClassName=".Preference" syncable="YES">
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="latitudeDelta" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitudeDelta" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Photo" positionX="-18" positionY="45" width="128" height="105"/>
         <element name="Pin" positionX="-45" positionY="0" width="128" height="90"/>
+        <element name="Preference" positionX="-27" positionY="63" width="128" height="105"/>
     </elements>
 </model>
