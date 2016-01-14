@@ -65,6 +65,7 @@ class Photo : NSManagedObject {
         
         // delete from core data
         CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(self)
+        CoreDataStackManager.sharedInstance().saveContext()
     }
     
     // determine a photo's image file path given its identifier
