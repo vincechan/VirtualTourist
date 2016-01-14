@@ -270,7 +270,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         }
         
         for photo in photosToDelete {
-            photo.delete()
+            sharedContext.deleteObject(photo)
         }
         CoreDataStackManager.sharedInstance().saveContext()
         
@@ -280,7 +280,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     // delete all photos
     func deleteAllPhotos() {
         for photo in fetchedResultsController.fetchedObjects as! [Photo] {
-            photo.delete()
+            sharedContext.deleteObject(photo)
         }
         CoreDataStackManager.sharedInstance().saveContext()
     }
