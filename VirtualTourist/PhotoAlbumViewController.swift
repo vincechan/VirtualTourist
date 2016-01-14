@@ -68,6 +68,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
         layout.minimumInteritemSpacing = 1
         
         layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+        
+        collectionView.reloadData()
         collectionView.collectionViewLayout = layout
         
     }
